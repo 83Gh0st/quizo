@@ -1,28 +1,24 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(cuid()) @map("_id")
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -31,7 +27,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(cuid()) @map("_id")
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -41,7 +37,7 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(cuid()) @map("_id")
   name          String?
   email         String?   @unique
   emailVerified DateTime?
@@ -51,13 +47,8 @@ model User {
   sessions      Session[]
 }
 
-enum GameType {
-  mcq
-  open_ended
-}
-
 model Game {
-  id          String     @id @default(cuid())
+  id          String     @id @default(cuid()) @map("_id")
   userId      String
   questions   Question[]
   timeStarted DateTime
@@ -69,14 +60,14 @@ model Game {
   @@index([userId])
 }
 
-model topic_count {
-  id    String @id @default(cuid())
+model TopicCount {
+  id    String @id @default(cuid()) @map("_id")
   topic String @unique
   count Int
 }
 
 model Question {
-  id                String   @id @default(cuid())
+  id                String   @id @default(cuid()) @map("_id")
   question          String
   answer            String
   gameId            String
@@ -89,4 +80,9 @@ model Question {
   game Game @relation(fields: [gameId], references: [id])
 
   @@index([gameId])
+}
+
+enum GameType {
+  mcq
+  open_ended
 }

@@ -12,26 +12,34 @@ import { prisma } from "@/lib/db";
 type Props = {};
 
 const HotTopicsCard = async (props: Props) => {
-  const topics = await prisma.topic_count.findMany({});
-  const formattedTopics = topics.map((topic) => {
-    return {
-      text: topic.topic,
-      value: topic.count,
-    };
-  });
-  return (
-    <Card className="col-span-4">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">Hot Topics</CardTitle>
-        <CardDescription>
-          Click on a topic to start a quiz on it.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="pl-2">
-        <WordCloud formattedTopics={formattedTopics} />
-      </CardContent>
-    </Card>
-  );
+  try {
+    // Access the `topicCount` model with the correct name as defined in your schema
+    const topics = await prisma.topicCount.findMany({});
+    
+    // Format the topics to match the expected structure for WordCloud
+    const formattedTopics = topics.map((topic) => ({
+      text: topic.topic,  // 'topic' field from your model
+      value: topic.count,  // 'count' field from your model
+    }));
+
+    return (
+      <Card className="col-span-4">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Hot Topics</CardTitle>
+          <CardDescription>
+            Click on a topic to start a quiz on it.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pl-2">
+          {/* Pass the formatted topics to WordCloud component */}
+          <WordCloud formattedTopics={formattedTopics} />
+        </CardContent>
+      </Card>
+    );
+  } catch (error) {
+    console.error("Error fetching topics:", error);
+    return <div>Error loading topics</div>;  // Optionally display an error message
+  }
 };
 
 export default HotTopicsCard;

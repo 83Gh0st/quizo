@@ -1,54 +1,52 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import {
-  getServerSession,
-  type NextAuthOptions,
-  type DefaultSession,
-} from "next-auth";
+import { getServerSession, type NextAuthOptions, type DefaultSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/lib/db";
 
-// Remove the unnecessary import
-// import { type GetServerSidePropsContext } from "next"; 
-
+// Augment NextAuth session and JWT types
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role?: string; // Example of additional properties
     } & DefaultSession["user"];
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     id: string;
+    role?: string;
   }
 }
 
+// NextAuth configuration options
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    jwt: async ({ token }) => {
-      const db_user = await prisma.user.findFirst({
-        where: {
-          email: token?.email,
-        },
-      });
-      if (db_user) {
-        token.id = db_user.id;
+    jwt: async ({ token, account }) => {
+      // Log account and token information
+      console.log('JWT Callback:', token, account);
+  
+      if (account && token?.email) {
+        const db_user = await prisma.user.findFirst({
+          where: { email: token.email },
+        });
+  
+        if (db_user) {
+          token.id = db_user.id;
+        }
       }
+  
       return token;
     },
     session: ({ session, token }) => {
+      // Log session and token data
+      console.log('Session Callback:', session, token);
+  
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name;
@@ -67,6 +65,7 @@ export const authOptions: NextAuthOptions = {
   ],
 };
 
+// Helper to get server session
 export const getAuthSession = () => {
   return getServerSession(authOptions);
 };
