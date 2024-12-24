@@ -46,9 +46,11 @@ const OpenEnded = ({ game }: Props) => {
   const { mutate: checkAnswer, isLoading: isChecking } = useMutation({
     mutationFn: async () => {
       let filledAnswer = blankAnswer;
+      // Cast input to HTMLInputElement to access the value property
       document.querySelectorAll("#user-blank-input").forEach((input) => {
-        filledAnswer = filledAnswer.replace("_____", input.value);
-        input.value = "";
+        const inputElement = input as HTMLInputElement; // Type assertion to HTMLInputElement
+        filledAnswer = filledAnswer.replace("_____", inputElement.value);
+        inputElement.value = "";
       });
       const payload: z.infer<typeof checkAnswerSchema> = {
         questionId: currentQuestion.id,

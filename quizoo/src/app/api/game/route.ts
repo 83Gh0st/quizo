@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     });
 
     // Increment the topic count
-    await prisma.topic_count.upsert({
+    await prisma.topicCount.upsert({
       where: { topic },
       create: {
         topic,

@@ -9,6 +9,15 @@ interface Props extends AvatarProps {
 }
 
 const UserAvatar = ({ user, ...props }: Props) => {
+  const getInitials = (name: string | undefined) => {
+    if (!name) return "";
+    const nameParts = name.split(" ");
+    return nameParts
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("")
+      .slice(0, 2); // Get first 2 initials, e.g., "John Doe" → "JD"
+  };
+
   return (
     <Avatar {...props}>
       {user.image ? (
@@ -22,7 +31,9 @@ const UserAvatar = ({ user, ...props }: Props) => {
         </div>
       ) : (
         <AvatarFallback>
-          <span className="sr-only ">{user?.name}</span>
+          <span className="sr-only">{user.name}</span>
+          {/* Display initials as fallback */}
+          {user.name ? getInitials(user.name) : "?"}
         </AvatarFallback>
       )}
     </Avatar>

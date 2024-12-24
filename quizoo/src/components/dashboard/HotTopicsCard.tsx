@@ -15,7 +15,7 @@ type Props = {};
 const HotTopicsCard = async (props: Props) => {
   try {
     // Access the `topicCount` model with the correct name as defined in your schema
-    const topics = await prisma.TopicCount.findMany({});
+    const topics = await prisma.topicCount.findMany({});
     
     // Format the topics to match the expected structure for WordCloud
     const formattedTopics = topics.map((topic) => ({

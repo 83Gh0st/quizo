@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,7 +15,10 @@ export function ThemeToggle({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
+
+  // Ensure the component doesn't render theme-dependent elements until the client is mounted
+  if (theme === undefined) return null; // Wait until the theme is loaded on the client
 
   return (
     <div className={className} {...props}>

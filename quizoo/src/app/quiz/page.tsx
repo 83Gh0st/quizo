@@ -1,11 +1,11 @@
 import React from "react";
-
 import { getAuthSession } from "@/lib/nextauth";
 import { redirect } from "next/navigation";
 import QuizCreation from "@/components/forms/QuizCreation";
+import { NextPage } from "next";  // Import NextPage type
 
 export const metadata = {
-  title: "Quiz | Quizzzy",
+  title: "Quiz | Quizzoo",
   description: "Quiz yourself on anything!",
 };
 
@@ -15,7 +15,7 @@ interface Props {
   };
 }
 
-const Quiz = async ({ searchParams }: Props) => {
+const Quiz: NextPage<Props> = async ({ searchParams }) => {
   const session = await getAuthSession();
   if (!session?.user) {
     redirect("/");

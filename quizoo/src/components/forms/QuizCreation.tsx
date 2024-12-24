@@ -41,17 +41,20 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
   const [showLoader, setShowLoader] = React.useState(false);
   const [finishedLoading, setFinishedLoading] = React.useState(false);
   const { toast } = useToast();
+
   const { mutate: getQuestions, isLoading } = useMutation({
     mutationFn: async ({ amount, topic, type }: Input) => {
+      console.log("Request data:", { amount, topic, type }); // Log API payload for debugging
       const response = await axios.post("/api/game", { amount, topic, type });
       return response.data;
     },
   });
 
+  // Set the default value of topic using topicParam
   const form = useForm<Input>({
     resolver: zodResolver(quizCreationSchema),
     defaultValues: {
-      topic: topicParam,
+      topic: topicParam ?? "", // Ensure topic is passed correctly
       type: "mcq",
       amount: 3,
     },
@@ -84,7 +87,6 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
       },
     });
   };
-  form.watch();
 
   if (showLoader) {
     return <LoadingQuestions finished={finishedLoading} />;
