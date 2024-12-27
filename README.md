@@ -200,5 +200,4 @@ This project was inspired by the [Build A Quiz App With JavaScript](https://yout
 
 Feel free to star the repo if you find it helpful! 🌟  
 For any issues or suggestions, open an [issue](https://github.com/83Gh0st/quizo/issues).
-```
 
