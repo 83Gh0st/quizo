@@ -1,3 +1,4 @@
+![image](https://github.com/user-attachments/assets/1f35482c-d997-4c3e-91d9-66a5bcce64bd)
 
 
 # Quizo: A Customizable Quiz Application
